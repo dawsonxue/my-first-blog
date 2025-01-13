@@ -150,3 +150,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 WAGTAIL_SITE_NAME = 'Django Girls Blog'
+
+WAGTAILADMIN_BASE_URL = BASE_DIR / 'cms'
