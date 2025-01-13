@@ -5,6 +5,7 @@ from django.utils import timezone
 from wagtail.models import Page
 from wagtail.fields import RichTextField
 from wagtail.admin.panels import FieldPanel
+from wagtail.search import index
 
 # Create your models here.
 class Post(models.Model):
@@ -43,4 +44,29 @@ class HomePage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel('intro')
+    ]
+
+class BlogPage(Page):
+    #author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,   # Allowing for null values
+        blank=True,  # Allowing for empty values in forms
+        on_delete=models.SET_NULL,  # Safe deletion strategy
+        related_name='blog_pages'
+    )
+    date = models.DateField("Post date")
+    intro = models.CharField(max_length=250)
+    text = RichTextField(blank=True)
+
+    search_fields = Page.search_fields + [
+        index.SearchField('intro'),
+        index.SearchField('text'),
+    ]
+
+    content_panels = Page.content_panels + [
+        FieldPanel('date'),
+        FieldPanel('author'),
+        FieldPanel('intro'),
+        FieldPanel('text'),
     ]
